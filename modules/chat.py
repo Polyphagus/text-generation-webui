@@ -5,9 +5,9 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
-
 import yaml
 from PIL import Image
+import os
 
 import modules.extensions as extensions_module
 import modules.shared as shared
@@ -473,14 +473,23 @@ def upload_character(json_file, img, tavern=False):
         i += 1
     if tavern:
         outfile_name = f'TavernAI-{outfile_name}'
-    with open(Path(f'characters/{outfile_name}.json'), 'w', encoding='utf-8') as f:
+    with open(Path(f'C:/Users/Poly/Downloads/oobabooga-windows/oobabooga-windows/text-generation-webui/characters/{outfile_name}.json'), 'w', encoding='utf-8') as f:
         f.write(json_file)
     if img is not None:
         img = Image.open(io.BytesIO(img))
-        img.save(Path(f'characters/{outfile_name}.png'))
-    print(f'New character saved to "characters/{outfile_name}.json".')
+        img.save(Path(f'C:/Users/Poly/Downloads/oobabooga-windows/oobabooga-windows/text-generation-webui/characters/{outfile_name}.png'))
+    
+    print(str(datetime.now()) + f' New character saved to "characters/{outfile_name}.json".')
     return outfile_name
 
+
+# def upload_tavern_character(img, name1, name2):
+#     _img = Image.open(io.BytesIO(img))
+#     _img.getexif()
+#     decoded_string = base64.b64decode(_img.info['chara'])
+#     _json = json.loads(decoded_string)
+#     _json = {"char_name": _json['name'], "char_persona": _json['description'], "char_greeting": _json["first_mes"], "example_dialogue": _json['mes_example'], "world_scenario": _json['scenario']}
+#     return upload_character(json.dumps(_json), img, tavern=True)
 
 def upload_tavern_character(img, name1, name2):
     _img = Image.open(io.BytesIO(img))
@@ -488,7 +497,11 @@ def upload_tavern_character(img, name1, name2):
     decoded_string = base64.b64decode(_img.info['chara'])
     _json = json.loads(decoded_string)
     _json = {"char_name": _json['name'], "char_persona": _json['description'], "char_greeting": _json["first_mes"], "example_dialogue": _json['mes_example'], "world_scenario": _json['scenario']}
-    return upload_character(json.dumps(_json), img, tavern=True)
+    img_file = io.BytesIO()
+    _img.save(img_file, format='PNG')
+    img_file.seek(0)
+    return upload_character(json.dumps(_json), img_file.read(), tavern=True)
+
 
 
 def upload_your_profile_picture(img, name1, name2, mode):
@@ -505,3 +518,27 @@ def upload_your_profile_picture(img, name1, name2, mode):
         print('Profile picture saved to "cache/pfp_me.png"')
 
     return chat_html_wrapper(shared.history['visible'], name1, name2, mode, reset_cache=True)
+
+
+
+# def main():
+#     img="C:/Users/Poly/Downloads/characters/tuohtg.png"
+#     with open(img, 'rb') as img_file:
+#         upload_tavern_character(img_file.read(), "You", "Assistant")
+
+
+def main():
+    directory = "C:/Users/Poly/Downloads/characters/"
+    for filename in os.listdir(directory):
+        if filename.endswith(".png"):  # You can specify a file extension filter if needed
+            img_path = os.path.join(directory, filename)
+            with open(img_path, 'rb') as img_file:
+                try:
+                    upload_tavern_character(img_file.read(), "You", "Assistant")
+                except KeyError as e:
+                    print(f"Error processing file {img_path}: {e}")
+
+
+
+if __name__=="__main__":
+    main()
