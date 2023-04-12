@@ -1,0 +1,33 @@
+
+To use you have to sate a subject and action or situation
+
+like 
+Harry Potter, Casts a spell
+Sailor Moon, Tokyo Tower
+
+if you deviate from this format in your interaction, it will start acting random and forget is an sd prompter
+
+Sometimes you will need to use a Ti or Lora so the character is capture because a lot of characters are not in stable diffusion training.
+
+you can write the embeding and the weight on the preprompt in sd extension interface settings in Oobabooga
+
+SD Model 
+revAnimated_v11 and icomix_V03Pruned sailormoon.pt
+
+Oobabboga
+alpaca-native-4bit
+Generation parameters preset
+Default
+Seed (-1 for random)
+-1
+Custom generation parameters (reference)
+temperature = 0.75
+top_p = 0.3
+top_k = 25
+typical_p = 1
+repetition_penalty = 1.2
+encoder_repetition_penalty =1
+no_repeat_ngram_size = 0
+min_length = 0
+
+
